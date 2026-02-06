@@ -1,27 +1,22 @@
-# TCMSP Related Targets Export (Playwright / Python)
+TCMSP Related Targets Export (Playwright / Python)
 
-给定一个中药名（中文），脚本会在 TCMSP 网站完成检索与多层跳转，进入药材详情页后抓取 **Related Targets → Targets Infomation**（站点原文拼写如此）的全部靶点数据，并导出到桌面 `Success*.xlsx`。
+The script in this project is constructed by Codex. The README is created by Codex and edited by human.
 
-这个仓库适合作为课程/科研助教示例：包含“稳定抓取策略 + 可复现调试证据链”（URL/DOM 断言、截图/HTML dump、XHR 日志、Playwright trace、自检模式）。
+A brief instruction of the project: 
 
-## 你会得到什么
-- 输入任意药材中文名（例如：`杜仲`、`三七`、`陈皮`）
-- 自动搜索并进入详情页（支持多层 drill-down）
-- 抓取 `Related Targets` 下 `Targets Infomation` 的全部条目（例如：杜仲约 100 页，共 1487 条）
-- 导出 Excel 到桌面：`Success.xlsx` 或 `Success{序号}.xlsx`
-- 自动生成 debug 目录：每一步 URL、页面 HTML、截图、可选 trace
+Aim： 给定一个中药名（中文），脚本会在 TCMSP 网站完成检索与多层跳转，进入药材详情页后抓取 **Related Targets → "Targets Infomation" 的全部靶点数据，并导出到桌面 `Success*.xlsx`。
 
-## 运行环境
-- macOS（已在 Apple Silicon 上稳定验证）
+Content：这个仓库适合作为课程/科研助教示例：包含“用于抓取的脚本 + debug目录”（URL/DOM 断言、截图/HTML dump、XHR 日志、Playwright trace、自检模式）。
+
+运行环境：
+- macOS：已在 Macbook M4 16G 上稳定验证，使用系统为MacOS 15.6.1
 - Python 3.10+（Python 3.14 亦可）
 
 > 其他系统（Windows/Linux）理论可用，但默认输出路径是 `~/Desktop`；若你的系统没有该目录，请自行创建或改代码中的输出路径。
 
-## macOS 一次性准备（给学生）
-1. 安装 Xcode 命令行工具（只需一次）：
-```bash
-xcode-select --install
-```
+必要准备：
+
+1：打开terminal
 
 2. 安装 Python（任选其一）：
 - 方式 A：用系统自带 Python（版本可能偏旧，不推荐）
@@ -32,7 +27,7 @@ brew install python
 
 > 如果你的机器上 `python` 指向的是 Python 2 或版本不对，请用 `python3` 替代 README 里的 `python`。
 
-## 安装（推荐 venv）
+安装环境（推荐 venv）
 ```bash
 git clone <your-repo-url>
 cd <repo>
@@ -45,7 +40,7 @@ python -m pip install -r requirements.txt
 python -m playwright install chromium
 ```
 
-## 最快上手（推荐学生第一次照做）
+最快上手（推荐学生第一次照做）
 ```bash
 HEADLESS=0 SLOW_MO=150 TRACE=1 python tcmsp_related_targets_export_v2.py 杜仲
 ```
@@ -57,26 +52,25 @@ HEADLESS=0 SLOW_MO=150 TRACE=1 python tcmsp_related_targets_export_v2.py 杜仲
 ## 常用运行方式
 
 ### 1) Headless 批量跑（默认）
-```bash
-HEADLESS=1 python tcmsp_related_targets_export_v2.py 杜仲
-```
+
+完成必要的安装并激活环境后，在terminal输入以下代码，script将自动运行（以杜仲为例）：
+HEADLESS=0 SLOW_MO=150 TRACE=1 python tcmsp_related_targets_export_v2.py 杜仲
 
 ### 2) 连续多次运行：导出到 `Success1.xlsx`、`Success2.xlsx`…
+
 用环境变量指定序号：
-```bash
 SUCCESS_INDEX=1 HEADLESS=1 python tcmsp_related_targets_export_v2.py 三七
 SUCCESS_INDEX=2 HEADLESS=1 python tcmsp_related_targets_export_v2.py 陈皮
-```
+
 
 或用参数指定：
-```bash
+
 HEADLESS=1 python tcmsp_related_targets_export_v2.py 三七 --success-index 1
-```
 
 ### 3) 自检模式（跑 3 次，覆盖 headless + headed）
-```bash
+
 SELF_CHECK=1 python tcmsp_related_targets_export_v2.py 杜仲
-```
+
 
 ## 输出说明（Excel）
 输出为一个 Sheet（列以站点返回为准），通常包含：
@@ -154,7 +148,7 @@ HEADLESS=0 SLOW_MO=150 TRACE=1 python tcmsp_related_targets_export_v2.py 杜仲
 ```
 
 ### 5) 站点偶发超时/抽风
-建议重试（脚本已内置 retry）并保留 debug 目录作为证据；必要时提高超时（修改脚本常量 `DEFAULT_TIMEOUT_MS`）。
+建议重试（脚本已内置 retry）并保留 debug 目录作为证据；必要时提高超时（修改脚本常量 `DEFAULT_TIMEOUT_MS`）。VPN可能导致超时，可以在完成下载并完成调试之后暂时关闭VPN以保证网站访问的速度。
 
 ## 教学/科研使用声明
 本脚本仅用于科研/教学演示自动化流程。请遵守 TCMSP 网站的使用条款与合理访问频率，避免对公共服务造成压力。
